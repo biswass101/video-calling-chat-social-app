@@ -1,0 +1,38 @@
+{
+  "name": "video-calling-server",
+  "version": "1.0.0",
+  "description": "mern project on video calling server",
+  "keywords": [
+    "video-call",
+    "socials",
+    "chat-app"
+  ],
+  "homepage": "https://github.com/biswass101/video-calling-chat-social-app#readme",
+  "bugs": {
+    "url": "https://github.com/biswass101/video-calling-chat-social-app/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/biswass101/video-calling-chat-social-app.git"
+  },
+  "license": "ISC",
+  "author": "Naeem Biswass Niloy",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mongoose": "^9.0.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5"
+  }
+}
