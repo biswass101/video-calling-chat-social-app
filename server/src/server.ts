@@ -1,13 +1,16 @@
+import "reflect-metadata";
 import http from "http";
 import { App } from "./app";
+import { EnvConfig } from "./config/env.config";
 
 export class Server {
   private appInstance: App;
   private server: http.Server | null = null;
   private readonly port: number;
+  private readonly envConfig = new EnvConfig();
 
   constructor() {
-    this.port = Number(process.env.PORT) || 3000;
+    this.port = Number(this.envConfig.getAppConfig().port);
     this.appInstance = new App();
   }
 

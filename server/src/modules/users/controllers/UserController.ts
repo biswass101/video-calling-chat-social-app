@@ -1,0 +1,68 @@
+import { Request, Response } from "express";
+import { UserService } from "../services/UserService";
+import httpStatus from "http-status";
+import { BaseController } from "../../../core/controllers/BaseController";
+import { SendResponse } from "../../../shared/utils/response/sendReponse";
+
+export class UserController extends BaseController {
+  private sendResponse: SendResponse;
+
+  private userService: UserService;
+
+  constructor() {
+    super();
+    this.sendResponse = new SendResponse();
+
+    this.userService = new UserService();
+  }
+  async create(req: Request, res: Response) {
+    const user = await this.userService.createUser(req.body);
+    this.sendResponse.response(res, {
+      statusCode: httpStatus.CREATED,
+      success: true,
+      message: "User created",
+      data: user,
+    });
+  }
+
+  async getAll(req: Request, res: Response) {
+    const users = await this.userService.getAllUsers();
+    this.sendResponse.response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User retrieved",
+      data: users,
+    });
+  }
+
+  async getOne(req: Request, res: Response) {
+    const { id } = req.params;
+    const user = await this.userService.getUserById(id);
+    this.sendResponse.response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Single user retrieved",
+      data: user,
+    });
+  }
+
+  async update(req: Request, res: Response) {
+    const user = await this.userService.updateUser(req.params.id, req.body);
+    this.sendResponse.response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User updated",
+      data: user,
+    });
+  }
+
+  async delete(req: Request, res: Response) {
+    const user = await this.userService.deleteUser(req.params.id);
+    this.sendResponse.response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User deleted",
+      data: user,
+    });
+  }
+}
