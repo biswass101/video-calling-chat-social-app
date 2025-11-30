@@ -11,7 +11,6 @@ export class UserFactory {
            isOnBoarding: user.isOnBoarding,
            _id: user._id,
            friends: user.friends,
-           token: "",
            createdAt: user.createdAt,
            updatedAt: user.updatedAt,
         }

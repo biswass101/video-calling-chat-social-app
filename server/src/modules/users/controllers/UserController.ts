@@ -3,16 +3,17 @@ import { UserService } from "../services/UserService";
 import httpStatus from "http-status";
 import { BaseController } from "../../../core/controllers/BaseController";
 import { SendResponse } from "../../../shared/utils/response/sendReponse";
+import { UserFactory } from "../factories/UserFactory";
 
 export class UserController extends BaseController {
   private sendResponse: SendResponse;
-
+  private userFactory: UserFactory;
   private userService: UserService;
 
   constructor() {
     super();
     this.sendResponse = new SendResponse();
-
+    this.userFactory = new UserFactory();
     this.userService = new UserService();
   }
   async create(req: Request, res: Response) {
@@ -21,7 +22,7 @@ export class UserController extends BaseController {
       statusCode: httpStatus.CREATED,
       success: true,
       message: "User created",
-      data: user,
+      data: this.userFactory.toResponse(user),
     });
   }
 

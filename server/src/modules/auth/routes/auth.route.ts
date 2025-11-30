@@ -3,6 +3,7 @@ import { AuthController } from "../controllers/AuthController";
 import { CreateRefreshTokenDto } from "../dtos/CreateRefreshTokenDto";
 import { CreateUserDTO } from "../../users/dtos/CreateUserDTO";
 import { ValidateDTO } from "../../../shared/utils/validators/validateDto";
+import { SignInUserDTO } from "../dtos/SigninUserDTO";
 
 export class AuthRoutes {
   public router: Router;
@@ -19,6 +20,7 @@ export class AuthRoutes {
   private initializeRoutes(): void {
     this.router.post(
       "/signin",
+      this.validateDto.validate(SignInUserDTO),
       this.authController.wrap(this.authController.signinUser)
     );
 

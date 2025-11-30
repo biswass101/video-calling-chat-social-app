@@ -51,7 +51,7 @@ export class UserService {
       }
     )
     result.token = token;
-    return this.userFactory.toResponse(result);
+    return result;
   }
 
   async getAllUsers() {
@@ -68,7 +68,7 @@ export class UserService {
 
   async getUserByEmail(email: string) {
     const result =  await this.userRepo.findByEmail(email);
-    return this.userFactory.toResponse(result!);
+    return result;
   }
 
   async updateUser(id: string, data: Partial<IUser>) {

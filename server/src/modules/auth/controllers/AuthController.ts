@@ -5,11 +5,13 @@ import { BaseController } from "../../../core/controllers/BaseController";
 import { AuthService } from "../services/AuthService";
 import { UserService } from "../../users/services/UserService";
 import { EnvConfig } from "../../../config/env.config";
+import { UserFactory } from "../../users/factories/UserFactory";
 
 export class AuthController extends BaseController {
   private sendResponse: SendResponse;
   private authService: AuthService;
   private userService: UserService;
+  private userFactory = new UserFactory();
   private envConfig: EnvConfig;
 
   constructor() {
@@ -21,7 +23,13 @@ export class AuthController extends BaseController {
   }
 
   async signinUser(req: Request, res: Response) {
-    const result = "This is a ans result from AuthService signinUser method";
+    const result = await this.authService.signinUser(req.body);
+    res.cookie("jwt", result.token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      sameSite: "strict",
+      secure: this.envConfig.getAppConfig().environment === "production",
+    });
     this.sendResponse.response(res, {
       statusCode: httpStatus.OK,
       success: true,
@@ -42,7 +50,7 @@ export class AuthController extends BaseController {
       statusCode: httpStatus.CREATED,
       success: true,
       message: "User signed up successfully",
-      data: result,
+      data: this.userFactory.toResponse(result),
     });
   }
 

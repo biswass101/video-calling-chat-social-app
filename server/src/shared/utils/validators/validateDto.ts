@@ -4,7 +4,7 @@ import { validate } from "class-validator";
 import httpStatus from 'http-status'
 import { SendResponse } from "../response/sendReponse";
 export class ValidateDTO {
-    public sendReponse: SendResponse;
+    private sendReponse: SendResponse;
 
     constructor() {
         this.sendReponse = new SendResponse();
