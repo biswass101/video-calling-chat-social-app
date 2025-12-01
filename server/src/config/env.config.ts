@@ -33,4 +33,11 @@ export class EnvConfig {
       url: this.env.AVATAR_URL
     }
   }
+
+  getStreamConfig() {
+    return {
+      apiKey: this.env.STREAMIFY_API_KEY,
+      secret: this.env.STREAMIFY_API_SECRET
+    }
+  }
 }

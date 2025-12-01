@@ -4,11 +4,13 @@ import { CreateRefreshTokenDto } from "../dtos/CreateRefreshTokenDto";
 import { CreateUserDTO } from "../../users/dtos/CreateUserDTO";
 import { ValidateDTO } from "../../../shared/utils/validators/validateDto";
 import { SignInUserDTO } from "../dtos/SigninUserDTO";
+import { AuthGuard } from "../../../core/guards/AuthGuard";
 
 export class AuthRoutes {
   public router: Router;
   private authController: AuthController;
   private validateDto: ValidateDTO;
+  private authGuard = new AuthGuard();
 
   constructor() {
     this.router = Router();
@@ -28,6 +30,17 @@ export class AuthRoutes {
       "/signup",
       this.validateDto.validate(CreateUserDTO),
       this.authController.wrap(this.authController.signupUser)
+    )
+
+    this.router.post(
+      "/signout",
+      this.authController.wrap(this.authController.signoutUser)
+    )
+
+    this.router.post(
+      "/onboarding",
+      this.authGuard.wrap(this.authGuard.protectRoute),
+      this.authController.wrap(this.authController.onboardUser)
     )
 
     this.router.post(

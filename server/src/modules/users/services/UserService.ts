@@ -7,6 +7,8 @@ import { UserFactory } from "../factories/UserFactory";
 import { RandomGenerator } from "../../../shared/utils/random/RandomGenerator";
 import { EnvConfig } from "../../../config/env.config";
 import { JwtService } from "../../../core/utils/jwt.service";
+import { StreamService } from "../../stream/services/StreamService";
+import { IJwtPayload } from "../../../core/interface/jwtPyaload.interface";
 
 export class UserService {
     private userRepo: UserRepository;
@@ -15,6 +17,8 @@ export class UserService {
     private randomGenerator: RandomGenerator;
     private envConfig: EnvConfig;
     private jwtService: JwtService;
+    private streamService: StreamService;
+    
     
   constructor() {
     this.userRepo = new UserRepository();
@@ -23,6 +27,7 @@ export class UserService {
     this.randomGenerator = new RandomGenerator();
     this.envConfig = new EnvConfig();
     this.jwtService = new JwtService();
+    this.streamService = new StreamService();
   }
 
   async createUser(user: IUser) {
@@ -41,10 +46,14 @@ export class UserService {
 
     const result = await this.userRepo.create(user);
 
-    // TODO: create the user in stream as well
+    await this.streamService.upsertStreamUser({
+      _id: result._id?.toString() as string,
+      fullName: result.fullName,
+      profilePic: result.profilePic || ""
+    })
     
     const token = this.jwtService.sign(
-      { userId: result._id?.toString() as string },
+      { userId: result._id?.toString() as string } as IJwtPayload,
       {
         secret: this.envConfig.getJWTConfig().secret!,
         expiresIn: this.envConfig.getJWTConfig().expiresIn!

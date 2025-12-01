@@ -54,6 +54,20 @@ export class AuthController extends BaseController {
     });
   }
 
+  async onboardUser(req: Request, res: Response) {
+    console.log("user onobarding: ", req.user);
+  }
+
+  signoutUser(req: Request, res: Response) {
+    res.clearCookie("jwt");
+    this.sendResponse.response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User logged out successfully",
+      data: null,
+    });
+  }
+
   async createRefreshToken(req: Request, res: Response) {
     const result = await this.authService.createRefreshToken(req.body);
     this.sendResponse.response(res, {
