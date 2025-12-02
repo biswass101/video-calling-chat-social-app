@@ -10,7 +10,7 @@ export interface IUser extends Document {
   nativeLanguage: string;
   learningLanguage: string;
   region: string;
-  isOnBoarding: boolean;
+  isOnboarded: boolean;
   friends: Types.ObjectId[];
   token?: string;
   createdAt?: Date;
@@ -34,7 +34,7 @@ export class UserModel {
         nativeLanguage: { type: String, default: "" },
         learningLanguage: { type: String, default: "" },
         region: { type: String, default: "" },
-        isOnBoarding: { type: Boolean, default: false },
+        isOnboarded: { type: Boolean, default: false },
         friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
       },
       { timestamps: true }

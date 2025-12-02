@@ -41,7 +41,7 @@ export class AuthService {
     async onboardUser(userId: string, userInfo: Partial<IUser>) {
         const updatedUser = await this.userService.updateUser(
             userId, 
-            {...userInfo, isOnBoarding: true}
+            {...userInfo, isOnboarded: true}
         );
         if(!updatedUser) 
             throw new ApiError(httpStatus.NOT_FOUND, "User not found or updated");

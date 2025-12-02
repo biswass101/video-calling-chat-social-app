@@ -16,6 +16,22 @@ export class UserRepository implements IRepository<IUser> {
     return await this.userModel.model.find();
   }
 
+  async findRecommended(currUserId: string, currentUser: IUser) {
+    return await this.userModel.model.find({
+      $and: [
+        {_id: {$ne: currUserId}},
+        {_id: {$nin: currentUser.friends}},
+        {isOnboarded: true}
+      ]
+    })
+  }
+
+  async findFriends(currUserId: string) {
+    return await this.userModel.model.findById(currUserId)
+      .select("friends")
+      .populate("friends", "fullName profilePic nativeLanguage learningLanguage")
+  }
+
   async findById(id: string): Promise<IUser | null> {
     return await this.userModel.model.findById(id);
   }

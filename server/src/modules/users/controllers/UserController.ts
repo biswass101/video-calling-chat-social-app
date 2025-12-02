@@ -4,6 +4,7 @@ import httpStatus from "http-status";
 import { BaseController } from "../../../core/controllers/BaseController";
 import { SendResponse } from "../../../shared/utils/response/sendReponse";
 import { UserFactory } from "../factories/UserFactory";
+import { IUser } from "../models/User.Model";
 
 export class UserController extends BaseController {
   private sendResponse: SendResponse;
@@ -32,7 +33,33 @@ export class UserController extends BaseController {
       statusCode: httpStatus.OK,
       success: true,
       message: "User retrieved",
-      data: users,
+      data: users.map(user => this.userFactory.toResponse(user)),
+    });
+  }
+
+  async getRecommendedUsers(req: Request, res: Response) {
+    const currentUserId = req.user?.userId;
+    const currentUser = await this.userService.getUserById(currentUserId);
+    const recommendedUser = await this.userService.getRecommendedUsers(
+      currentUserId, currentUser as IUser
+    )
+    this.sendResponse.response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Recommended users retrieved",
+      data: recommendedUser.map(user => this.userFactory.toResponse(user)),
+    });
+  }
+
+  async getFriends(req: Request, res: Response) {
+    const currentUserId = req.user?.userId;
+    const friends = await this.userService.getFriends(currentUserId);
+
+    this.sendResponse.response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Friends retrieved",
+      data: friends,
     });
   }
 

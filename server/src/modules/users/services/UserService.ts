@@ -65,7 +65,17 @@ export class UserService {
 
   async getAllUsers() {
     const result = await this.userRepo.findAll();
-    return result.map(user => this.userFactory.toResponse(user));
+    return result;
+  }
+
+  async getRecommendedUsers(currUserId: string, currentUser: IUser) {
+    const result = await this.userRepo.findRecommended(currUserId, currentUser)
+    return result;
+  }
+
+  async getFriends(currUserId: string) {
+    const result = await this.userRepo.findFriends(currUserId)
+    return result;
   }
 
   async getUserById(id: string) {
