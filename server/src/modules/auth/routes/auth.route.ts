@@ -21,6 +21,12 @@ export class AuthRoutes {
   }
 
   private initializeRoutes(): void {
+
+    this.router.get('/me', 
+      this.authGuard.wrap(this.authGuard.protectRoute),
+      this.authController.wrap(this.authController.getMe)
+    )
+
     this.router.post(
       "/signin",
       this.validateDto.validate(SignInUserDTO),

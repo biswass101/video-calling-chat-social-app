@@ -6,6 +6,7 @@ import { AuthService } from "../services/AuthService";
 import { UserService } from "../../users/services/UserService";
 import { EnvConfig } from "../../../config/env.config";
 import { UserFactory } from "../../users/factories/UserFactory";
+import { IUser } from "../../users/models/User.Model";
 
 export class AuthController extends BaseController {
   private sendResponse: SendResponse;
@@ -20,6 +21,17 @@ export class AuthController extends BaseController {
     this.authService = new AuthService();
     this.userService = new UserService();
     this.envConfig = new EnvConfig();
+  }
+
+  async getMe(req: Request, res: Response) {
+    const { userId } = req.user;
+    const result = await this.userService.getUserById(userId) as IUser;
+    this.sendResponse.response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User profile retrieved",
+      data: this.userFactory.toResponse(result),
+    });
   }
 
   async signinUser(req: Request, res: Response) {

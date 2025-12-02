@@ -72,7 +72,7 @@ export class UserService {
     const isExists = await this.userRepo.findById(id)
     if(!isExists) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
     const result = await this.userRepo.findById(id);
-    return this.userFactory.toResponse(result!);
+    return result;
   }
 
   async getUserByEmail(email: string) {
