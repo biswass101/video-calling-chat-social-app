@@ -1,4 +1,4 @@
-import { IUser } from "../models/User.Model";
+import { IUser } from "../models/User.model";
 
 export class UserFactory {
     toResponse(user: Partial<IUser>) {

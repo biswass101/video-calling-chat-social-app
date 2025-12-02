@@ -38,6 +38,11 @@ export class UserRoutes {
     )
 
     this.router.post(
+      "/friend-request/:id",
+      this.userController.wrap(this.userController.sendFriendRequest)
+    )
+
+    this.router.post(
       "/",
       this.validateDto.validate(CreateUserDTO),
       this.userController.wrap(this.userController.create)

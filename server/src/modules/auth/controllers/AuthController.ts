@@ -6,7 +6,7 @@ import { AuthService } from "../services/AuthService";
 import { UserService } from "../../users/services/UserService";
 import { EnvConfig } from "../../../config/env.config";
 import { UserFactory } from "../../users/factories/UserFactory";
-import { IUser } from "../../users/models/User.Model";
+import { IUser } from "../../users/models/User.model";
 
 export class AuthController extends BaseController {
   private sendResponse: SendResponse;

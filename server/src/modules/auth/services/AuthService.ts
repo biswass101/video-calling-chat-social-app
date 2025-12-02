@@ -3,7 +3,7 @@ import { HashService } from "../../../core/utils/hash.service";
 import { JwtService } from "../../../core/utils/jwt.service";
 import ApiError from "../../../shared/utils/errors/apiError";
 import { StreamService } from "../../stream/services/StreamService";
-import { IUser } from "../../users/models/User.Model";
+import { IUser } from "../../users/models/User.model";
 import { UserService } from "../../users/services/UserService";
 import { AuthFactory } from "../factories/AuthFactory";
 import { IAuth } from "../models/Auth.model";

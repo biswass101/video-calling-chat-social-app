@@ -11,7 +11,7 @@ export interface IUser extends Document {
   learningLanguage: string;
   region: string;
   isOnboarded: boolean;
-  friends: Types.ObjectId[];
+  friends: string[];
   token?: string;
   createdAt?: Date;
   updatedAt?: Date;

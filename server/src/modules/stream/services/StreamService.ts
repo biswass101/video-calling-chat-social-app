@@ -1,6 +1,6 @@
 import { StreamChat } from "stream-chat";
 import { EnvConfig } from "../../../config/env.config";
-import { IUser } from "../../users/models/User.Model";
+import { IUser } from "../../users/models/User.model";
 import { Types } from "mongoose";
 
 export class StreamService {

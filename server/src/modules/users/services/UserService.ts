@@ -2,24 +2,25 @@ import { UserRepository } from "../repositories/UserRepository";
 import ApiError from "../../../shared/utils/errors/apiError";
 import httpStatus from "http-status";
 import { HashService } from "../../../core/utils/hash.service";
-import { IUser } from "../models/User.Model";
+import { IUser } from "../models/User.model";
 import { UserFactory } from "../factories/UserFactory";
 import { RandomGenerator } from "../../../shared/utils/random/RandomGenerator";
 import { EnvConfig } from "../../../config/env.config";
 import { JwtService } from "../../../core/utils/jwt.service";
 import { StreamService } from "../../stream/services/StreamService";
 import { IJwtPayload } from "../../../core/interface/jwtPyaload.interface";
+import { FriendRequestRepository } from "../repositories/FriendRequestRepository";
 
 export class UserService {
-    private userRepo: UserRepository;
-    private hashService: HashService;
-    private userFactory: UserFactory;
-    private randomGenerator: RandomGenerator;
-    private envConfig: EnvConfig;
-    private jwtService: JwtService;
-    private streamService: StreamService;
-    
-    
+  private userRepo: UserRepository;
+  private friendRequestRepo = new FriendRequestRepository();
+  private hashService: HashService;
+  private userFactory: UserFactory;
+  private randomGenerator: RandomGenerator;
+  private envConfig: EnvConfig;
+  private jwtService: JwtService;
+  private streamService: StreamService;
+
   constructor() {
     this.userRepo = new UserRepository();
     this.hashService = new HashService();
@@ -32,16 +33,19 @@ export class UserService {
 
   async createUser(user: IUser) {
     const isExists = await this.userRepo.findByEmail(user.email);
-    if(isExists) throw new ApiError(
-      httpStatus.CONFLICT, 
-      "Email already exists, please use a different email"
-    );
+    if (isExists)
+      throw new ApiError(
+        httpStatus.CONFLICT,
+        "Email already exists, please use a different email"
+      );
 
     const hashed = await this.hashService.hash(user.password);
-    user.password = hashed
+    user.password = hashed;
 
     const idx = this.randomGenerator.generateRandomNumber(1, 100);
-    const randomAvatarUrl = `${this.envConfig.getAvatarConfig().url}/${idx}.png`;
+    const randomAvatarUrl = `${
+      this.envConfig.getAvatarConfig().url
+    }/${idx}.png`;
     user.profilePic = randomAvatarUrl;
 
     const result = await this.userRepo.create(user);
@@ -49,16 +53,16 @@ export class UserService {
     await this.streamService.upsertStreamUser({
       _id: result._id?.toString() as string,
       fullName: result.fullName,
-      profilePic: result.profilePic || ""
-    })
-    
+      profilePic: result.profilePic || "",
+    });
+
     const token = this.jwtService.sign(
       { userId: result._id?.toString() as string } as IJwtPayload,
       {
         secret: this.envConfig.getJWTConfig().secret!,
-        expiresIn: this.envConfig.getJWTConfig().expiresIn!
+        expiresIn: this.envConfig.getJWTConfig().expiresIn!,
       }
-    )
+    );
     result.token = token;
     return result;
   }
@@ -69,34 +73,70 @@ export class UserService {
   }
 
   async getRecommendedUsers(currUserId: string, currentUser: IUser) {
-    const result = await this.userRepo.findRecommended(currUserId, currentUser)
+    const result = await this.userRepo.findRecommended(currUserId, currentUser);
     return result;
   }
 
   async getFriends(currUserId: string) {
-    const result = await this.userRepo.findFriends(currUserId)
+    const result = await this.userRepo.findFriends(currUserId);
     return result;
   }
 
+  async sendFriendReqeust(myId: string, recipientId: string) {
+    if (myId === recipientId) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "You can't send friend request to yourself"
+      );
+    }
+
+    const recipent = await this.userRepo.findById(recipientId);
+    if (!recipent) {
+      throw new ApiError(
+        httpStatus.NOT_FOUND,
+        "Recipient not found"
+      );
+    }
+
+    if(recipent.friends.includes(myId as string)) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "You are already friends with this user"
+      );
+    }
+
+    const existingRequest = await this.friendRequestRepo.findRequest(myId, recipientId)
+    if(existingRequest) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "A friend request already exits between you and this user"
+      );
+    }
+
+    const friendRequest = await this.friendRequestRepo.createRequest(myId, recipientId);
+
+    return friendRequest;
+  }
+
   async getUserById(id: string) {
-    const isExists = await this.userRepo.findById(id)
-    if(!isExists) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+    const isExists = await this.userRepo.findById(id);
+    if (!isExists) throw new ApiError(httpStatus.NOT_FOUND, "User not found");
     const result = await this.userRepo.findById(id);
     return result;
   }
 
   async getUserByEmail(email: string) {
-    const result =  await this.userRepo.findByEmail(email);
+    const result = await this.userRepo.findByEmail(email);
     return result;
   }
 
   async updateUser(id: string, data: Partial<IUser>) {
-    const result = await this.userRepo.update(id, data)
+    const result = await this.userRepo.update(id, data);
     return this.userFactory.toResponse(result!);
   }
 
   async deleteUser(id: string) {
-    const result =  await this.userRepo.delete(id);
+    const result = await this.userRepo.delete(id);
     return this.userFactory.toResponse(result!);
   }
 }

@@ -1,5 +1,5 @@
 import { IRepository } from "../../../core/repositories/BaseRepository";
-import { IUser, UserModel } from "../models/User.Model";
+import { IUser, UserModel } from "../models/User.model";
 
 export class UserRepository implements IRepository<IUser> {
  private userModel: UserModel;

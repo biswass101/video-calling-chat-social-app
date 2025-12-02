@@ -4,7 +4,7 @@ import httpStatus from "http-status";
 import { BaseController } from "../../../core/controllers/BaseController";
 import { SendResponse } from "../../../shared/utils/response/sendReponse";
 import { UserFactory } from "../factories/UserFactory";
-import { IUser } from "../models/User.Model";
+import { IUser } from "../models/User.model";
 
 export class UserController extends BaseController {
   private sendResponse: SendResponse;
@@ -60,6 +60,20 @@ export class UserController extends BaseController {
       success: true,
       message: "Friends retrieved",
       data: friends,
+    });
+  }
+
+  async sendFriendRequest (req: Request, res: Response) {
+    const {userId: myId} = req.user;
+    const {id: recipientId} = req.params;
+
+    const friendRequst = await this.userService.sendFriendReqeust(myId, recipientId)
+
+    this.sendResponse.response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Friend request was sent",
+      data: friendRequst,
     });
   }
 
