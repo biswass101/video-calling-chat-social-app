@@ -55,7 +55,14 @@ export class AuthController extends BaseController {
   }
 
   async onboardUser(req: Request, res: Response) {
-    console.log("user onobarding: ", req.user);
+    const { userId } = req.user;
+    const result = await this.authService.onboardUser(userId, req.body);
+    this.sendResponse.response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "User onboarded successfully",
+      data: this.userFactory.toResponse(result),
+    });
   }
 
   signoutUser(req: Request, res: Response) {

@@ -5,6 +5,7 @@ import { CreateUserDTO } from "../../users/dtos/CreateUserDTO";
 import { ValidateDTO } from "../../../shared/utils/validators/validateDto";
 import { SignInUserDTO } from "../dtos/SigninUserDTO";
 import { AuthGuard } from "../../../core/guards/AuthGuard";
+import { OnboardUserDTO } from "../dtos/OnboardUserDTO";
 
 export class AuthRoutes {
   public router: Router;
@@ -40,6 +41,7 @@ export class AuthRoutes {
     this.router.post(
       "/onboarding",
       this.authGuard.wrap(this.authGuard.protectRoute),
+      this.validateDto.validate(OnboardUserDTO),
       this.authController.wrap(this.authController.onboardUser)
     )
 

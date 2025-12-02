@@ -8,6 +8,8 @@ export interface IUser extends Document {
   profilePic: string;
   bio: string;
   nativeLanguage: string;
+  learningLanguage: string;
+  region: string;
   isOnBoarding: boolean;
   friends: Types.ObjectId[];
   token?: string;
@@ -30,6 +32,8 @@ export class UserModel {
         bio: { type: String, default: "" },
         profilePic: { type: String, default: "" },
         nativeLanguage: { type: String, default: "" },
+        learningLanguage: { type: String, default: "" },
+        region: { type: String, default: "" },
         isOnBoarding: { type: Boolean, default: false },
         friends: [{ type: Schema.Types.ObjectId, ref: "User" }],
       },
