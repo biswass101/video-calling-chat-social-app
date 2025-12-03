@@ -63,19 +63,9 @@ export class UserController extends BaseController {
     });
   }
 
-  async sendFriendRequest (req: Request, res: Response) {
-    const {userId: myId} = req.user;
-    const {id: recipientId} = req.params;
+ 
 
-    const friendRequst = await this.userService.sendFriendReqeust(myId, recipientId)
 
-    this.sendResponse.response(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: "Friend request was sent",
-      data: friendRequst,
-    });
-  }
 
   async getOne(req: Request, res: Response) {
     const { id } = req.params;

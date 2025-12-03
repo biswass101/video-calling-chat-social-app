@@ -9,11 +9,9 @@ import { EnvConfig } from "../../../config/env.config";
 import { JwtService } from "../../../core/utils/jwt.service";
 import { StreamService } from "../../stream/services/StreamService";
 import { IJwtPayload } from "../../../core/interface/jwtPyaload.interface";
-import { FriendRequestRepository } from "../repositories/FriendRequestRepository";
 
 export class UserService {
   private userRepo: UserRepository;
-  private friendRequestRepo = new FriendRequestRepository();
   private hashService: HashService;
   private userFactory: UserFactory;
   private randomGenerator: RandomGenerator;
@@ -80,42 +78,6 @@ export class UserService {
   async getFriends(currUserId: string) {
     const result = await this.userRepo.findFriends(currUserId);
     return result;
-  }
-
-  async sendFriendReqeust(myId: string, recipientId: string) {
-    if (myId === recipientId) {
-      throw new ApiError(
-        httpStatus.BAD_REQUEST,
-        "You can't send friend request to yourself"
-      );
-    }
-
-    const recipent = await this.userRepo.findById(recipientId);
-    if (!recipent) {
-      throw new ApiError(
-        httpStatus.NOT_FOUND,
-        "Recipient not found"
-      );
-    }
-
-    if(recipent.friends.includes(myId as string)) {
-      throw new ApiError(
-        httpStatus.BAD_REQUEST,
-        "You are already friends with this user"
-      );
-    }
-
-    const existingRequest = await this.friendRequestRepo.findRequest(myId, recipientId)
-    if(existingRequest) {
-      throw new ApiError(
-        httpStatus.BAD_REQUEST,
-        "A friend request already exits between you and this user"
-      );
-    }
-
-    const friendRequest = await this.friendRequestRepo.createRequest(myId, recipientId);
-
-    return friendRequest;
   }
 
   async getUserById(id: string) {

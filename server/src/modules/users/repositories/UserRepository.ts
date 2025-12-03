@@ -43,6 +43,15 @@ export class UserRepository implements IRepository<IUser> {
   async update(id: string, data: Partial<IUser>): Promise<IUser | null> {
     return await this.userModel.model.findByIdAndUpdate(id, data, { new: true });
   }
+  
+  async updateFriendList(senderId: string, recipientId: string) {
+    return await this.userModel.model.findByIdAndUpdate(
+        senderId,
+        {
+            $addToSet: { friends: recipientId }
+        }
+    )
+  }
 
   async delete(id: string): Promise<IUser | null> {
     return await this.userModel.model.findByIdAndDelete(id);

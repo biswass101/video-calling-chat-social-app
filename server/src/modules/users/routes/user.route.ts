@@ -4,10 +4,12 @@ import { CreateUserDTO } from "../dtos/CreateUserDTO";
 import { UpdateUserDTO } from "../dtos/UpdateUserDTO";
 import { ValidateDTO } from "../../../shared/utils/validators/validateDto";
 import { AuthGuard } from "../../../core/guards/AuthGuard";
+import { FriendRequestController } from "../controllers/FriendRequestController";
 
 export class UserRoutes {
   public router: Router;
   private userController: UserController;
+  private friendRequestController = new FriendRequestController();
   private validateDto: ValidateDTO;
   private authGuard = new AuthGuard;
 
@@ -37,9 +39,20 @@ export class UserRoutes {
       this.userController.wrap(this.userController.getFriends)
     )
 
+    this.router.get(
+      "/friend-requests",
+      this.friendRequestController.wrap(this.friendRequestController.getFriendRequests)
+      
+    )
+
     this.router.post(
       "/friend-request/:id",
-      this.userController.wrap(this.userController.sendFriendRequest)
+      this.friendRequestController.wrap(this.friendRequestController.sendFriendRequest)
+    )
+
+    this.router.put(
+      "/friend-request/:id/accept",
+      this.friendRequestController.wrap(this.friendRequestController.acceptFriendRequest)
     )
 
     this.router.post(
