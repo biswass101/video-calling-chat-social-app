@@ -9,13 +9,25 @@ export class FriendRequestController extends BaseController {
   private sendResponse = new SendResponse();
 
   async getFriendRequests(req: Request, res: Response) {
-    const friendRequsts = await this.friendRequestService.getReqeusts();
+    const {userId} = req.user;
+    const allFriendRequsts = await this.friendRequestService.getAllReqeuests(userId);
 
     this.sendResponse.response(res, {
       statusCode: httpStatus.OK,
       success: true,
-      message: "Friend request was sent",
-      data: friendRequsts,
+      message: "Friend requests retrieved",
+      data: allFriendRequsts,
+    });
+  }
+
+  async getOutgoingFriendReqs(req: Request, res: Response) {
+    const {userId} = req.user;
+    const outgoingFriendRequsts = await this.friendRequestService.getOutgoingRequests(userId);
+    this.sendResponse.response(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: "Outgoing friend requests retrieved",
+      data: outgoingFriendRequsts,
     });
   }
 

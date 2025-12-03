@@ -2,6 +2,8 @@ import { StreamChat } from "stream-chat";
 import { EnvConfig } from "../../../config/env.config";
 import { IUser } from "../../users/models/User.model";
 import { Types } from "mongoose";
+import ApiError from "../../../shared/utils/errors/apiError";
+import httpStatus from 'http-status';
 
 export class StreamService {
     private envConfig = new EnvConfig();
@@ -24,6 +26,9 @@ export class StreamService {
 
     // Todo: do it later
     async generateStreamToken (userId: string | Types.ObjectId) {
-
+        const userIdStr = userId.toString();
+        const token = this.streamClient.createToken(userIdStr);
+        if(!token) throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, "Error generating token")
+        return token;
     }
 }

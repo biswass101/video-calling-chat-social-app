@@ -7,12 +7,32 @@ export class FriendRequestRepository {
     return await this.friendRequestModel.model.findById(id);
   }
 
-  async findManyRequest(myId: string, status: "accepted" | "pending") {
+  async findManyRequest(myId: string, status: {accecpted: string , pending: string}) {
+    const incomingReqs =  await this.friendRequestModel.model.find(
+        {
+            recipient_id: myId,
+            status: status.pending
+        }
+    ).populate("sender", "fullName profilePic nativeLanguage learningLanguage");
+
+    const acceptedReqs = await this.friendRequestModel.model.find(
+      {
+        sender_id: myId,
+        status: status.accecpted
+      }
+    ).populate("recipient", "fullName profilePic");
+
+    return {incomingReqs, acceptedReqs};
+  }
+
+
+  async findOutgoingRequests (myId: string) {
     return await this.friendRequestModel.model.find(
-        // {
-        //     sender_id: 
-        // }
-    )
+      {
+        sender_id: myId,
+        status: "pending"
+      }
+    ).populate("recipent", "fullName profilePic nativeLanguage learningLanguage")
   }
 
   async findRequest(myId: string, recipientId: string) {

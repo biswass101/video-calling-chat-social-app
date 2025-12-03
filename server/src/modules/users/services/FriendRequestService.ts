@@ -9,8 +9,19 @@ export class FriendRequestService {
     private friendRequestRepo = new FriendRequestRepository();
     private userRepo = new UserRepository();
 
-    async getReqeusts () {
+    async getAllReqeuests (myId: string) {
+        const friendRequests = await this.friendRequestRepo.findManyRequest(myId, 
+          {
+            accecpted: FriendReqEnum.ACCEPTED,
+            pending: FriendReqEnum.PENDING
+          }
+        )
         
+        return friendRequests;
+    }
+
+    async getOutgoingRequests (myId: string) {
+      return await this.friendRequestRepo.findOutgoingRequests(myId);
     }
 
     async sendReqeust(myId: string, recipientId: string) {

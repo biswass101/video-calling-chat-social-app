@@ -45,6 +45,11 @@ export class UserRoutes {
       
     )
 
+    this.router.get(
+      "/outgoing-friend-requests",
+      this.friendRequestController.wrap(this.friendRequestController.getOutgoingFriendReqs)
+    )
+
     this.router.post(
       "/friend-request/:id",
       this.friendRequestController.wrap(this.friendRequestController.sendFriendRequest)
