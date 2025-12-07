@@ -10,7 +10,7 @@ export class UserFactory {
            nativeLanguage: user.nativeLanguage,
            learningLanguage: user.learningLanguage,
            region: user.region,
-           isOnBoarding: user.isOnBoarding,
+           isOnBoarded: user.isOnboarded,
            _id: user._id,
            friends: user.friends,
            createdAt: user.createdAt,
